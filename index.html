@@ -1,0 +1,729 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeBotYou - Intelligent Chatbot Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    colors: {
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                    },
+                    fontFamily: {
+                        sans: ["var(--font-sans)"],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    }
+                },
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --background: hsl(0 0% 7%);
+            --foreground: hsl(0 0% 98%);
+            --card: hsl(0 0% 11%);
+            --card-foreground: hsl(0 0% 98%);
+            --primary: hsl(141 76% 48%);
+            --primary-foreground: hsl(0 0% 7%);
+            --secondary: hsl(0 0% 18%);
+            --secondary-foreground: hsl(0 0% 70%);
+            --muted: hsl(0 0% 15%);
+            --muted-foreground: hsl(0 0% 70%);
+            --accent: hsl(141 76% 48%);
+            --accent-foreground: hsl(0 0% 7%);
+            --border: hsl(0 0% 20%);
+            --input: hsl(0 0% 15%);
+            --ring: hsl(141 76% 48%);
+            --radius: 12px;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, hsl(0 0% 7%) 0%, hsl(0 0% 11%) 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(29, 185, 84, 0.15);
+        }
+
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(29, 185, 84, 0.3);
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #1DB954;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans">
+    <!-- @COMPONENT: Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-robot text-primary text-2xl"></i>
+                    <span class="text-xl font-bold">WeBotYou</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-muted-foreground hover:text-foreground transition-colors">Home</a>
+                    <a href="#about" class="text-muted-foreground hover:text-foreground transition-colors">About</a>
+                    <a href="#benefits" class="text-muted-foreground hover:text-foreground transition-colors">Benefits</a>
+                    <a href="#demo" class="text-muted-foreground hover:text-foreground transition-colors">Demo</a>
+                    <button class="bg-primary text-primary-foreground px-6 py-2 rounded-full font-medium hover:bg-primary/90 transition-colors">
+                        Get Started
+                    </button>
+                </div>
+                <button class="md:hidden text-foreground">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: Navigation -->
+
+    <!-- @COMPONENT: Hero Section -->
+    <section id="home" class="min-h-screen gradient-bg flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="animate-slide-up">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                    <span id="greeting">Good Evening</span>!
+                </h1>
+                <h2 class="text-2xl md:text-4xl font-semibold mb-8 text-muted-foreground">
+                    Welcome to <span class="text-primary">WeBotYou</span>
+                </h2>
+                <p class="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
+                    Transform your customer support with intelligent chatbots. We've got you covered with cutting-edge AI solutions that handle queries while you focus on growing your business.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button class="bg-primary text-primary-foreground px-8 py-4 rounded-full font-medium text-lg hover:bg-primary/90 transition-all transform hover:scale-105 glow-effect">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Start Your Journey
+                    </button>
+                    <button class="border border-border text-foreground px-8 py-4 rounded-full font-medium text-lg hover:bg-card transition-all">
+                        <i class="fas fa-play mr-2"></i>
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating elements -->
+        <div class="absolute top-20 left-10 opacity-20 animate-pulse-slow">
+            <i class="fas fa-comments text-primary text-4xl"></i>
+        </div>
+        <div class="absolute bottom-20 right-10 opacity-20 animate-pulse-slow">
+            <i class="fas fa-brain text-primary text-4xl"></i>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Hero Section -->
+
+    <!-- @COMPONENT: Brand Description -->
+    <section id="about" class="py-20 bg-card">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+                    Our <span class="text-primary">Mission</span>
+                </h2>
+                <p class="text-lg md:text-xl text-muted-foreground leading-relaxed mb-12">
+                    To provide companies and manufacturers their own intelligent chatbot embedded on their website, which helps handle customer queries while they focus on making profit, without worrying about query handling and customer support.
+                </p>
+                
+                <div class="grid md:grid-cols-3 gap-8 mt-16">
+                    <div class="bg-background p-8 rounded-lg card-hover">
+                        <i class="fas fa-zap text-primary text-4xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-4">Lightning Fast</h3>
+                        <p class="text-muted-foreground">Instant responses to customer queries, 24/7 availability without any downtime.</p>
+                    </div>
+                    
+                    <div class="bg-background p-8 rounded-lg card-hover">
+                        <i class="fas fa-shield-alt text-primary text-4xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-4">Secure & Reliable</h3>
+                        <p class="text-muted-foreground">Enterprise-grade security with reliable performance you can trust.</p>
+                    </div>
+                    
+                    <div class="bg-background p-8 rounded-lg card-hover">
+                        <i class="fas fa-chart-line text-primary text-4xl mb-4"></i>
+                        <h3 class="text-xl font-semibold mb-4">Smart Analytics</h3>
+                        <p class="text-muted-foreground">Detailed insights into customer interactions and behavior patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Brand Description -->
+
+    <!-- @COMPONENT: Benefits Comparison -->
+    <section id="benefits" class="py-20 gradient-bg">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+                    Why Choose <span class="text-primary">AI Chatbots</span> Over Human Support?
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+                    Companies don't have to spend much on human support when they have a manageable flow of queries that can be easily handled by intelligent chatbots.
+                </p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Chatbot Advantages -->
+                <div class="bg-card p-8 rounded-2xl border border-primary/20">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-robot text-primary text-5xl mb-4"></i>
+                        <h3 class="text-2xl font-bold text-primary">AI Chatbot</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">24/7 Availability</h4>
+                                <p class="text-muted-foreground text-sm">Never sleeps, always ready to help customers</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Cost Effective</h4>
+                                <p class="text-muted-foreground text-sm">One-time setup vs recurring salary costs</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Instant Response</h4>
+                                <p class="text-muted-foreground text-sm">Millisecond response times</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Scalable</h4>
+                                <p class="text-muted-foreground text-sm">Handle unlimited concurrent conversations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-check-circle text-primary text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">No Human Error</h4>
+                                <p class="text-muted-foreground text-sm">Consistent, accurate responses every time</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Human Support Limitations -->
+                <div class="bg-card p-8 rounded-2xl border border-muted/20">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-user text-muted-foreground text-5xl mb-4"></i>
+                        <h3 class="text-2xl font-bold text-muted-foreground">Human Support</h3>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-times-circle text-red-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Limited Hours</h4>
+                                <p class="text-muted-foreground text-sm">Requires breaks, shifts, and time off</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-times-circle text-red-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">High Costs</h4>
+                                <p class="text-muted-foreground text-sm">Salaries, benefits, training, and overhead</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-times-circle text-red-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Variable Response Time</h4>
+                                <p class="text-muted-foreground text-sm">Depends on queue and agent availability</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-times-circle text-red-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Limited Capacity</h4>
+                                <p class="text-muted-foreground text-sm">Can only handle one conversation at a time</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <i class="fas fa-times-circle text-red-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-semibold mb-2">Human Fatigue</h4>
+                                <p class="text-muted-foreground text-sm">Performance varies with mood and energy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Benefits Comparison -->
+
+    <!-- @COMPONENT: Interactive Demo -->
+    <section id="demo" class="py-20 bg-card">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+                    Try Our <span class="text-primary">AI Assistant</span>
+                </h2>
+                <p class="text-lg text-muted-foreground max-w-3xl mx-auto">
+                    Paste any website URL below and watch our AI analyze it to provide intelligent responses about the business. Experience the power of automated customer support.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-background rounded-2xl p-8 border border-border">
+                    <!-- URL Input Section -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-muted-foreground mb-4">
+                            Enter a website URL to analyze:
+                        </label>
+                        <div class="flex gap-4">
+                            <input 
+                                type="url" 
+                                id="urlInput"
+                                placeholder="https://example.com"
+                                class="flex-1 bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                            >
+                            <button 
+                                id="botItBtn"
+                                class="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                            >
+                                <i class="fas fa-magic-wand-sparkles mr-2"></i>
+                                Bot It!
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Interface -->
+                    <div class="bg-muted/30 rounded-xl p-6 min-h-[400px] flex flex-col">
+                        <div id="chatMessages" class="flex-1 space-y-4 mb-4 overflow-y-auto max-h-80">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                                    <i class="fas fa-robot text-primary-foreground text-sm"></i>
+                                </div>
+                                <div class="bg-card p-4 rounded-lg rounded-tl-none max-w-md">
+                                    <p class="text-sm">Hello! I'm your AI assistant. Paste a website URL above and I'll analyze it to answer questions about that business. Try asking me anything!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="flex gap-3">
+                            <input 
+                                type="text" 
+                                id="chatInput"
+                                placeholder="Ask me anything about the website..."
+                                class="flex-1 bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                disabled
+                            >
+                            <button 
+                                id="sendBtn"
+                                class="bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled
+                            >
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Interactive Demo -->
+
+    <!-- @COMPONENT: Call to Action -->
+    <section class="py-20 gradient-bg">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-8 text-foreground">
+                Ready to Transform Your Customer Support?
+            </h2>
+            <p class="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
+                Join hundreds of businesses that have revolutionized their customer experience with our intelligent chatbot solutions.
+            </p>
+            
+            <div class="bg-card rounded-2xl p-8 max-w-md mx-auto border border-border">
+                <h3 class="text-xl font-semibold mb-6">Get Your Custom Chatbot</h3>
+                <form class="space-y-4">
+                    <input 
+                        type="text" 
+                        placeholder="Your Name"
+                        class="w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                    <input 
+                        type="email" 
+                        placeholder="Business Email"
+                        class="w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                    <input 
+                        type="url" 
+                        placeholder="Your Website URL"
+                        class="w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    >
+                    <textarea 
+                        placeholder="Tell us about your business needs..."
+                        rows="3"
+                        class="w-full bg-input border border-border rounded-lg px-4 py-3 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                    ></textarea>
+                    <button 
+                        type="submit"
+                        class="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+                    >
+                        <i class="fas fa-rocket mr-2"></i>
+                        Get Started Today
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: Call to Action -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-background border-t border-border py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-robot text-primary text-2xl"></i>
+                        <span class="text-xl font-bold">WeBotYou</span>
+                    </div>
+                    <p class="text-muted-foreground">
+                        Intelligent chatbot solutions for modern businesses. We've got you covered.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground transition-colors">Custom Chatbots</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">AI Integration</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Support & Maintenance</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Analytics Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-muted-foreground">
+                        <li><a href="#" class="hover:text-foreground transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Case Studies</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-foreground transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-muted-foreground hover:text-primary transition-colors">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
+                <p>&copy; 2024 WeBotYou. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> for better customer experiences.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        (function() {
+            // Time-based greeting functionality
+            function updateGreeting() {
+                const now = new Date();
+                // Convert to IST (UTC+5:30)
+                const istTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000));
+                const hour = istTime.getHours();
+                
+                let greeting;
+                if (hour >= 5 && hour < 12) {
+                    greeting = "Good Morning";
+                } else if (hour >= 12 && hour < 17) {
+                    greeting = "Good Afternoon";
+                } else if (hour >= 17 && hour < 21) {
+                    greeting = "Good Evening";
+                } else {
+                    greeting = "Good Night";
+                }
+                
+                document.getElementById('greeting').textContent = greeting;
+            }
+
+            // Chatbot functionality
+            let currentWebsiteData = null;
+            
+            function addMessage(content, isBot = true) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex items-start space-x-3';
+                
+                if (isBot) {
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                            <i class="fas fa-robot text-primary-foreground text-sm"></i>
+                        </div>
+                        <div class="bg-card p-4 rounded-lg rounded-tl-none max-w-md">
+                            <p class="text-sm">${content}</p>
+                        </div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="flex-1"></div>
+                        <div class="bg-primary p-4 rounded-lg rounded-tr-none max-w-md">
+                            <p class="text-sm text-primary-foreground">${content}</p>
+                        </div>
+                        <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                            <i class="fas fa-user text-muted-foreground text-sm"></i>
+                        </div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function showTypingIndicator() {
+                const chatMessages = document.getElementById('chatMessages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'flex items-start space-x-3';
+                typingDiv.id = 'typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                        <i class="fas fa-robot text-primary-foreground text-sm"></i>
+                    </div>
+                    <div class="bg-card p-4 rounded-lg rounded-tl-none">
+                        <div class="flex space-x-1">
+                            <div class="typing-indicator"></div>
+                            <div class="typing-indicator"></div>
+                            <div class="typing-indicator"></div>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            // Mock website analysis function
+            function analyzeWebsite(url) {
+                // TODO: Implement actual ChatGPT API integration for website analysis
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const mockData = {
+                            domain: new URL(url).hostname,
+                            business_type: "E-commerce/Technology Company",
+                            services: ["Web development", "AI solutions", "Customer support"],
+                            description: "A modern technology company focused on innovative solutions"
+                        };
+                        resolve(mockData);
+                    }, 2000);
+                });
+            }
+
+            // Mock ChatGPT response function
+            function getChatGPTResponse(question, websiteData) {
+                // TODO: Implement actual ChatGPT API integration
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const responses = [
+                            `Based on the analysis of ${websiteData.domain}, I can see this is a ${websiteData.business_type}. How can I help you learn more about their services?`,
+                            `This website offers ${websiteData.services.join(', ')}. What specific information would you like to know?`,
+                            `${websiteData.description}. Feel free to ask me any questions about their business!`,
+                            `I've analyzed the website and can help answer questions about their products, services, or contact information. What would you like to know?`
+                        ];
+                        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                        resolve(randomResponse);
+                    }, 1500);
+                });
+            }
+
+            // Event listeners
+            document.getElementById('botItBtn').addEventListener('click', async function() {
+                const urlInput = document.getElementById('urlInput');
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    addMessage("Please enter a valid website URL first!", true);
+                    return;
+                }
+
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    addMessage("Please enter a complete URL starting with http:// or https://", true);
+                    return;
+                }
+
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...';
+                
+                showTypingIndicator();
+                
+                try {
+                    currentWebsiteData = await analyzeWebsite(url);
+                    removeTypingIndicator();
+                    
+                    addMessage(`Great! I've analyzed ${currentWebsiteData.domain}. This appears to be a ${currentWebsiteData.business_type}. You can now ask me questions about this website, their services, or anything else you'd like to know!`, true);
+                    
+                    // Enable chat input
+                    document.getElementById('chatInput').disabled = false;
+                    document.getElementById('sendBtn').disabled = false;
+                    document.getElementById('chatInput').placeholder = `Ask me about ${currentWebsiteData.domain}...`;
+                    
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessage("Sorry, I couldn't analyze that website. Please check the URL and try again.", true);
+                } finally {
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-magic-wand-sparkles mr-2"></i>Bot It!';
+                }
+            });
+
+            document.getElementById('sendBtn').addEventListener('click', async function() {
+                const chatInput = document.getElementById('chatInput');
+                const question = chatInput.value.trim();
+                
+                if (!question || !currentWebsiteData) return;
+                
+                addMessage(question, false);
+                chatInput.value = '';
+                
+                showTypingIndicator();
+                
+                try {
+                    const response = await getChatGPTResponse(question, currentWebsiteData);
+                    removeTypingIndicator();
+                    addMessage(response, true);
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessage("Sorry, I encountered an error. Please try again.", true);
+                }
+            });
+
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    document.getElementById('sendBtn').click();
+                }
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Initialize greeting
+            updateGreeting();
+            
+            // Update greeting every minute
+            setInterval(updateGreeting, 60000);
+        })();
+    </script>
+</body>
+</html>

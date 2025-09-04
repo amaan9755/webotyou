@@ -28,30 +28,27 @@ export default function CallToAction() {
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const { toast } = useToast();
 
-  // TODO: Replace with your actual Google Sheets integration
-  // Example: https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec/edit#gid=0
-  // You can use Google Apps Script or a service like Zapier to connect this form to Google Sheets
-  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec';
+  // ✅ Google Sheets Web App URL
+  const GOOGLE_SHEETS_URL =
+    "https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec";
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactForm) => {
-      // Current implementation: Store in local backend
-      const response = await apiRequest("POST", "/api/contact", data);
-      
-      // TODO: Uncomment and configure Google Sheets integration
-      // if (GOOGLE_SHEETS_URL !== 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec') {
-      //   try {
-      //     await fetch(GOOGLE_SHEETS_URL, {
-      //       method: 'POST',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       body: JSON.stringify(data)
-      //     });
-      //   } catch (error) {
-      //     console.warn('Failed to sync with Google Sheets:', error);
-      //   }
-      // }
-      
-      return response.json();
+      // Send data to Google Sheets
+      try {
+        await fetch(GOOGLE_SHEETS_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+      } catch (error) {
+        console.warn("⚠️ Failed to sync with Google Sheets:", error);
+      }
+
+      // Optionally: still send to your backend if you want
+      // const response = await apiRequest("POST", "/api/contact", data);
+      // return response.json();
+      return { success: true };
     },
     onSuccess: () => {
       toast({
@@ -77,7 +74,7 @@ export default function CallToAction() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       contactSchema.parse(formData);
       setErrors({});
@@ -96,9 +93,9 @@ export default function CallToAction() {
   };
 
   const handleInputChange = (field: keyof ContactForm, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -111,7 +108,7 @@ export default function CallToAction() {
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12" data-testid="text-cta-intro">
           Join hundreds of businesses that have revolutionized their customer experience with our intelligent chatbot solutions.
         </p>
-        
+
         <Card className="max-w-md mx-auto bg-card border-border card-tilt relative" data-testid="card-contact-form">
           <CardContent className="p-8">
             <h3 className="text-xl font-semibold mb-6">Get Your Custom Chatbot</h3>
@@ -127,7 +124,7 @@ export default function CallToAction() {
                 />
                 {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
               </div>
-              
+
               <div>
                 <Input
                   type="email"
@@ -139,7 +136,7 @@ export default function CallToAction() {
                 />
                 {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
-              
+
               <div>
                 <Input
                   type="url"
@@ -151,7 +148,7 @@ export default function CallToAction() {
                 />
                 {errors.website_url && <p className="text-red-500 text-xs mt-1">{errors.website_url}</p>}
               </div>
-              
+
               <div>
                 <Textarea
                   placeholder="Tell us about your business needs..."
@@ -163,7 +160,7 @@ export default function CallToAction() {
                 />
                 {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
               </div>
-              
+
               <Button
                 type="submit"
                 disabled={submitMutation.isPending}

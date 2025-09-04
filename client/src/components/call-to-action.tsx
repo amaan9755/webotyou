@@ -31,7 +31,7 @@ export default function CallToAction() {
   // TODO: Replace with your actual Google Sheets integration
   // Example: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0
   // You can use Google Apps Script or a service like Zapier to connect this form to Google Sheets
-  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw';
+  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec';
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactForm) => {
@@ -39,17 +39,17 @@ export default function CallToAction() {
       const response = await apiRequest("POST", "/api/contact", data);
       
       // TODO: Uncomment and configure Google Sheets integration
-      // if (GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBHOOK_URL_HERE') {
-      //   try {
-      //     await fetch(GOOGLE_SHEETS_URL, {
-      //       method: 'POST',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       body: JSON.stringify(data)
-      //     });
-      //   } catch (error) {
-      //     console.warn('Failed to sync with Google Sheets:', error);
-      //   }
-      // }
+       if (GOOGLE_SHEETS_URL !== 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec') {
+         try {
+          await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify(data)
+           });
+         } catch (error) {
+           console.warn('Failed to sync with Google Sheets:', error);
+         }
+       }
       
       return response.json();
     },

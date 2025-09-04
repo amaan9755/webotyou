@@ -29,9 +29,9 @@ export default function CallToAction() {
   const { toast } = useToast();
 
   // TODO: Replace with your actual Google Sheets integration
-  // Example: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0
+  // Example: https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec/edit#gid=0
   // You can use Google Apps Script or a service like Zapier to connect this form to Google Sheets
-  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'YOUR_GOOGLE_SHEETS_WEBHOOK_URL_HERE';
+  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec';
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactForm) => {
@@ -39,7 +39,7 @@ export default function CallToAction() {
       const response = await apiRequest("POST", "/api/contact", data);
       
       // TODO: Uncomment and configure Google Sheets integration
-      // if (GOOGLE_SHEETS_URL !== 'YOUR_GOOGLE_SHEETS_WEBHOOK_URL_HERE') {
+      // if (GOOGLE_SHEETS_URL !== 'https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec') {
       //   try {
       //     await fetch(GOOGLE_SHEETS_URL, {
       //       method: 'POST',

@@ -18,6 +18,10 @@ const contactSchema = z.object({
 
 type ContactForm = z.infer<typeof contactSchema>;
 
+// Replace this with your actual Google Sheets Apps Script URL
+const GOOGLE_SHEETS_URL =
+  "https://script.google.com/macros/s/AKfycbzw-aqoqnttNFBuawTxRBPvs-GrW0ZrMbE27jET0V0UA94rTxs_43oDsy7xO17Dcv5dcA/exec";
+
 export default function CallToAction() {
   const [formData, setFormData] = useState<ContactForm>({
     name: "",
@@ -27,10 +31,6 @@ export default function CallToAction() {
   });
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const { toast } = useToast();
-
-  // Google Sheets Web App URL
-  const GOOGLE_SHEETS_URL =
-    "https://script.google.com/macros/s/AKfycbyjQX9Y4WSrrD7Qa7IUKN9i5Rf__O1XQi7lIPORIXAbbhMXx8lqwnXYEHMHIFCgMQuQHw/exec";
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactForm) => {
@@ -42,13 +42,12 @@ export default function CallToAction() {
           body: JSON.stringify(data),
         });
       } catch (error) {
-        console.warn("⚠️ Failed to sync with Google Sheets:", error);
+        console.warn("Failed to sync with Google Sheets:", error);
       }
 
-      // Optionally: still send to your backend if you want
-      // const response = await apiRequest("POST", "/api/contact", data);
-      // return response.json();
-      return { success: true };
+      //  Also keep your existing backend logic
+      const response = await apiRequest("POST", "/api/contact", data);
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -100,18 +99,31 @@ export default function CallToAction() {
   };
 
   return (
-    <section id="contact" className="py-20 gradient-bg" data-testid="call-to-action-section">
+    <section
+      id="contact"
+      className="py-20 gradient-bg"
+      data-testid="call-to-action-section"
+    >
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl md:text-5xl font-bold mb-8 text-foreground">
           Ready to Transform Your Customer Support?
         </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12" data-testid="text-cta-intro">
-          Join hundreds of businesses that have revolutionized their customer experience with our intelligent chatbot solutions.
+        <p
+          className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12"
+          data-testid="text-cta-intro"
+        >
+          Join hundreds of businesses that have revolutionized their customer
+          experience with our intelligent chatbot solutions.
         </p>
 
-        <Card className="max-w-md mx-auto bg-card border-border card-tilt relative" data-testid="card-contact-form">
+        <Card
+          className="max-w-md mx-auto bg-card border-border card-tilt relative"
+          data-testid="card-contact-form"
+        >
           <CardContent className="p-8">
-            <h3 className="text-xl font-semibold mb-6">Get Your Custom Chatbot</h3>
+            <h3 className="text-xl font-semibold mb-6">
+              Get Your Custom Chatbot
+            </h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input
@@ -122,7 +134,9 @@ export default function CallToAction() {
                   className="w-full bg-input border-border text-foreground placeholder-muted-foreground focus:ring-primary"
                   data-testid="input-contact-name"
                 />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+                {errors.name && (
+                  <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+                )}
               </div>
 
               <div>
@@ -134,7 +148,9 @@ export default function CallToAction() {
                   className="w-full bg-input border-border text-foreground placeholder-muted-foreground focus:ring-primary"
                   data-testid="input-contact-email"
                 />
-                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
 
               <div>
@@ -142,11 +158,17 @@ export default function CallToAction() {
                   type="url"
                   placeholder="Your Website URL (optional)"
                   value={formData.website_url}
-                  onChange={(e) => handleInputChange("website_url", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("website_url", e.target.value)
+                  }
                   className="w-full bg-input border-border text-foreground placeholder-muted-foreground focus:ring-primary"
                   data-testid="input-contact-website"
                 />
-                {errors.website_url && <p className="text-red-500 text-xs mt-1">{errors.website_url}</p>}
+                {errors.website_url && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.website_url}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -158,7 +180,9 @@ export default function CallToAction() {
                   className="w-full bg-input border-border text-foreground placeholder-muted-foreground focus:ring-primary"
                   data-testid="textarea-contact-message"
                 />
-                {errors.message && <p className="text-red-500 text-xs mt-1">{errors.message}</p>}
+                {errors.message && (
+                  <p className="text-red-500 text-xs mt-1">{errors.message}</p>
+                )}
               </div>
 
               <Button

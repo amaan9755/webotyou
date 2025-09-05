@@ -5,7 +5,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Rocket } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
@@ -28,35 +27,41 @@ export default function CallToAction() {
   const [errors, setErrors] = useState<Partial<ContactForm>>({});
   const { toast } = useToast();
 
-  // TODO: Replace with your actual Google Sheets integration
-  // Example: https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0
-  // You can use Google Apps Script or a service like Zapier to connect this form to Google Sheets
-  const GOOGLE_SHEETS_URL = import.meta.env.VITE_GOOGLE_SHEETS_URL || 'https://docs.google.com/spreadsheets/d/1eIMb4O72e3n82mYk2L_m8Syij5Sxmeyd0p57DoW9MD0/edit?usp=sharing';
+  // Google Sheets Web App URL - Replace this with your deployed Google Apps Script Web App URL
+  // Instructions: 
+  // 1. Go to script.google.com
+  // 2. Create a new project
+  // 3. Paste the Google Apps Script code (see instructions below)
+  // 4. Deploy as Web App with execute permissions set to "Anyone"
+  // 5. Copy the Web App URL and replace the URL below
+  const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwm_RnpXdQuHMnCiB_1Brh_j2fuNC3D92yXvpYO4-ZRyuO1eq3dxvzj9VI_4_F1Y57d/exec";
 
   const submitMutation = useMutation({
     mutationFn: async (data: ContactForm) => {
-      // Current implementation: Store in local backend
-      const response = await apiRequest("POST", "/api/contact", data);
+      // Send data to Google Sheets via Google Apps Script
+      const response = await fetch(GOOGLE_SHEETS_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Required for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          website_url: data.website_url || '',
+          message: data.message,
+          timestamp: new Date().toISOString()
+        })
+      });
       
-      // TODO: Uncomment and configure Google Sheets integration
-       if (GOOGLE_SHEETS_URL !== 'https://docs.google.com/spreadsheets/d/1eIMb4O72e3n82mYk2L_m8Syij5Sxmeyd0p57DoW9MD0/edit?usp=sharing') {
-         try {
-           await fetch(GOOGLE_SHEETS_URL, {
-             method: 'POST',
-             headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify(data)
-           });
-         } catch (error) {
-           console.warn('Failed to sync with Google Sheets:', error);
-         }
-       }
-      
-      return response.json();
+      // Since we're using no-cors mode, we can't read the response
+      // We'll assume success if no error is thrown
+      return { success: true };
     },
     onSuccess: () => {
       toast({
-        title: "Success!",
-        description: "Thank you for your inquiry. We'll get back to you soon!",
+        title: "Thank you! We'll get back to you soon.",
+        description: "Your information has been submitted successfully.",
       });
       setFormData({
         name: "",
@@ -68,8 +73,8 @@ export default function CallToAction() {
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to submit your inquiry. Please try again.",
+        title: "Something went wrong. Please try again.",
+        description: "Failed to submit your information. Please check your connection and try again.",
         variant: "destructive",
       });
     },
